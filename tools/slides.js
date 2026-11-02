@@ -91,6 +91,10 @@ function fitSize(sql, w, preferred, min = 12) {
   while (size > min && codeWidth(sql) * size * 0.6 / 72 > w - 0.5) size -= 1;
   return size;
 }
+function fitHeight(sql, size, avail, min = 11) {
+  while (size > min && codeHeight(sql, size) > avail) size -= 1;
+  return size;
+}
 function codeHeight(sql, size) {
   const n = sql.replace(/\s+$/, "").split("\n").length;
   return Math.max(0.6, n * size * 1.26 / 72 + 0.38);
@@ -188,7 +192,7 @@ function bulletList(items, size, color) {
     const sub = typeof it === "object" && it.sub;
     const text = typeof it === "object" ? it.text : it;
     const sz = sub ? size - 3 : size;
-    const lead = { text: sub ? "      · " : "—  ", options: { fontSize: sz, color: sub ? K.muted : K.accent, bold: !sub } };
+    const lead = { text: sub ? "      · " : "—  ", options: { fontSize: sz, color: sub ? K.muted : K.accent, bold: false, fontFace: F.body } };
     const r = para(text, { fontSize: sz, color: sub ? K.muted : color });
     const all = [lead, ...r];
     all[all.length - 1].options = { ...all[all.length - 1].options, breakLine: i < items.length - 1 };
@@ -308,7 +312,7 @@ const R = {
     const cw = 6.4;
     if (s.layout === "two") {
       // 코드가 길고 결과도 길 때: 코드 슬라이드 + 결과 전용 슬라이드
-      const size = fitSize(s.sql, W - 2 * M, pref);
+      const size = fitHeight(s.sql, fitSize(s.sql, W - 2 * M, pref), BOTTOM - TOP - (s.caption ? 0.75 : 0.1));
       const ch = codeBlock(sl, s.sql, M, TOP + 0.05, W - 2 * M, size);
       if (s.caption) caption(sl, s.caption, TOP + 0.05 + ch + 0.3);
       const sl2 = content(pres, { label: s.label, title: s.title + " — 실행 결과" }, sec);

@@ -240,8 +240,8 @@ def keep_tag(text, tag):
 def main():
     built = 0
     for src in sorted((ROOT / "src").rglob("*")):
-        if not src.is_file():
-            continue
+        if not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides":
+            continue  # 슬라이드 정의(src/slides)는 tools/build_slides.py 담당
         rel = src.relative_to(ROOT / "src")
         m = CHAPTER_DIR.search(str(rel))
         nn = m.group(1) if m else "01"
@@ -265,6 +265,9 @@ def main():
         if src.name == "practice.src.md":
             title = text.splitlines()[0].lstrip("# ").strip()
             p = process(strip_tag(keep_tag(text, "q"), "a"), c, "practice")
+            c.close()
+            install(make_setup(nn, "build"))   # 문제지·해설지를 각각 깨끗한 DB에서 (DDL 실습 대비)
+            c = conn(db)
             a = process(keep_tag(strip_tag(text, "q"), "a"), c, "answers")
             (dst.parent / "practice.md").write_text(p, encoding="utf-8")
             (dst.parent / "answers.md").write_text(a.replace(title, title + " — 정답과 해설", 1), encoding="utf-8")
