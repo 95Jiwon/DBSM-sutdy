@@ -3,5 +3,6 @@
   <component name="DataSourcePerFileMappings">
     <file url="file://$PROJECT_DIR$/chapters/ch05-join/setup.sql" value="30b631ef-9204-40a3-a605-4242b191f892" />
     <file url="file://$PROJECT_DIR$/chapters/ch05-join/study01.sql" value="30b631ef-9204-40a3-a605-4242b191f892" />
+    <file url="file://$PROJECT_DIR$/chapters/ch06-subquery-window/setup.sql" value="30b631ef-9204-40a3-a605-4242b191f892" />
   </component>
 </project>
