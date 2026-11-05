@@ -67,17 +67,26 @@ CREATE DATABASE {db}
 USE {db};
 
 """
+    extra = ""
+    hits = sorted((ROOT / "src" / "chapters").glob(f"ch{nn}-*/setup_extra.sql"))
+    if hits:  # 챕터 전용 추가 테이블 (예: Ch08 = Ch07에서 만든 쿠폰 테이블)
+        extra = ("\n-- =============================================================================\n"
+                 f"--  이 챕터 전용 추가 구성 (src/chapters/{hits[0].parent.name}/setup_extra.sql)\n"
+                 "-- =============================================================================\n"
+                 + hits[0].read_text(encoding="utf-8").replace("{{DB}}", db) + "\n")
     return head + schema.split("-- =============================================================================\n", 2)[-1] \
-        + "\n" + seed + "\n-- 설치 확인\n" + counts
+        + "\n" + seed + extra + "\n-- 설치 확인\n" + counts
 
 
 def conn(db):
     # 디코더를 빼고 서버가 보낸 텍스트를 그대로 받는다 → Workbench 표시와 동일 (9:00:00 X, 09:00:00 O)
+    # autocommit=True → Workbench 기본값과 같다. 트랜잭션 예제는 START TRANSACTION 으로 명시적으로 시작.
     enc = {k: v for k, v in pymysql.converters.conversions.items() if isinstance(k, type)}
     c = pymysql.connect(host="localhost", user="dev", password="dev", database=db, charset="utf8mb4",
-                        autocommit=False, conv=enc)
+                        autocommit=True, conv=enc)
     with c.cursor() as cur:
         cur.execute("SET time_zone = '+09:00'")
+        cur.execute("SET SQL_SAFE_UPDATES = 1")   # Workbench 기본값과 동일하게 (키 조건 없는 UPDATE·DELETE 차단)
     return c
 
 
@@ -109,7 +118,6 @@ def run(c, code):
             if cur.description:
                 cols = [d[0] for d in cur.description]
                 result = (cols, cur.fetchall())
-    c.commit()
     return result
 
 
@@ -174,8 +182,7 @@ def process(text, c, mode="doc"):
         if kind == "error":
             try:
                 run(c, code)
-            except pymysql.MySQLError as e:
-                c.rollback()
+            except pymysql.MySQLError as e:   # Workbench처럼 에러가 나도 열린 트랜잭션은 그대로 둔다
                 return f"```sql\n{code}```\n\n<sub>▶ 실행 결과 · 에러</sub>\n\n```text\nError Code: {e.args[0]}. {e.args[1]}\n```\n"
             raise SystemExit(f"에러가 나야 하는데 성공함:\n{code}")
         if kind == "answer":
@@ -240,7 +247,8 @@ def keep_tag(text, tag):
 def main():
     built = 0
     for src in sorted((ROOT / "src").rglob("*")):
-        if not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides":
+        if (not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides"
+                or src.name == "setup_extra.sql"):   # setup_extra.sql 은 setup.sql 안에 합쳐짐
             continue  # 슬라이드 정의(src/slides)는 tools/build_slides.py 담당
         rel = src.relative_to(ROOT / "src")
         m = CHAPTER_DIR.search(str(rel))
