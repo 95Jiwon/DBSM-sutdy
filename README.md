@@ -25,7 +25,7 @@
 | 05 | [JOIN — 흩어진 데이터 잇기](chapters/ch05-join/README.md) | ✅ |
 | 06 | [서브쿼리·집합·윈도우 함수](chapters/ch06-subquery-window/README.md) | ✅ |
 | 07 | [테이블 설계와 제약조건 (DDL)](chapters/ch07-ddl-constraints/README.md) | ✅ |
-| 08 | 데이터 변경과 트랜잭션 | 예정 |
+| 08 | [데이터 변경과 트랜잭션](chapters/ch08-dml-transaction/README.md) | ✅ |
 | 09 | 데이터 모델링과 정규화 | 예정 |
 | 10 | 뷰·인덱스·사용자 관리 | 예정 |
 

@@ -28,7 +28,6 @@ def run_sql(c, sql, limit, expect_error=False):
     try:
         res = build.run(c, sql)
     except pymysql.MySQLError as e:
-        c.rollback()
         if not expect_error:
             raise SystemExit(f"SQL 실패:\n{sql}\n→ {e}")
         return {"error": f"Error Code: {e.args[0]}. {e.args[1]}"}
