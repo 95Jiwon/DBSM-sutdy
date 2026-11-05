@@ -1,7 +1,7 @@
 # Ch07. 테이블 설계와 제약조건 (DDL)
 
 > **PART 2 · 쓰기** | 3시간 | 난이도 ★★
-> 이전: [Ch06. 서브쿼리·집합·윈도우 함수](../ch06-subquery-window/README.md) | 다음: Ch08. 데이터 변경과 트랜잭션 (준비 중)
+> 이전: [Ch06. 서브쿼리·집합·윈도우 함수](../ch06-subquery-window/README.md) | 다음: [Ch08. 데이터 변경과 트랜잭션](../ch08-dml-transaction/README.md)
 
 ## 수업 준비
 

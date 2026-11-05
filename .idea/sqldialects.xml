@@ -4,5 +4,6 @@
     <file url="file://$PROJECT_DIR$/chapters/ch05-join/setup.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/chapters/ch05-join/study01.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/chapters/ch06-subquery-window/setup.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/chapters/ch07-ddl-constraints/setup.sql" dialect="MySQL" />
   </component>
 </project>

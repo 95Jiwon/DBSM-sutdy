@@ -67,17 +67,31 @@ CREATE DATABASE {db}
 USE {db};
 
 """
+    # 챕터 전용 추가 구성. 기본은 누적(Ch08 쿠폰 테이블 → Ch09·Ch10에도 포함).
+    # 첫 줄에 '@this-chapter-only' 가 있으면 그 챕터에만 넣는다.
+    extra = ""
+    for f in sorted((ROOT / "src" / "chapters").glob("ch*/setup_extra.sql")):
+        fnn = f.parent.name[2:4]
+        body = f.read_text(encoding="utf-8")
+        if fnn > nn or (fnn < nn and "@this-chapter-only" in body.splitlines()[0]):
+            continue
+        extra += ("\n-- =============================================================================\n"
+                  f"--  추가 구성 (src/chapters/{f.parent.name}/setup_extra.sql)\n"
+                  "-- =============================================================================\n"
+                  + body.replace("{{DB}}", db) + "\n")
     return head + schema.split("-- =============================================================================\n", 2)[-1] \
-        + "\n" + seed + "\n-- 설치 확인\n" + counts
+        + "\n" + seed + extra + "\n-- 설치 확인\n" + counts
 
 
 def conn(db):
     # 디코더를 빼고 서버가 보낸 텍스트를 그대로 받는다 → Workbench 표시와 동일 (9:00:00 X, 09:00:00 O)
+    # autocommit=True → Workbench 기본값과 같다. 트랜잭션 예제는 START TRANSACTION 으로 명시적으로 시작.
     enc = {k: v for k, v in pymysql.converters.conversions.items() if isinstance(k, type)}
     c = pymysql.connect(host="localhost", user="dev", password="dev", database=db, charset="utf8mb4",
-                        autocommit=False, conv=enc)
+                        autocommit=True, conv=enc)
     with c.cursor() as cur:
         cur.execute("SET time_zone = '+09:00'")
+        cur.execute("SET SQL_SAFE_UPDATES = 1")   # Workbench 기본값과 동일하게 (키 조건 없는 UPDATE·DELETE 차단)
     return c
 
 
@@ -109,7 +123,6 @@ def run(c, code):
             if cur.description:
                 cols = [d[0] for d in cur.description]
                 result = (cols, cur.fetchall())
-    c.commit()
     return result
 
 
@@ -174,8 +187,7 @@ def process(text, c, mode="doc"):
         if kind == "error":
             try:
                 run(c, code)
-            except pymysql.MySQLError as e:
-                c.rollback()
+            except pymysql.MySQLError as e:   # Workbench처럼 에러가 나도 열린 트랜잭션은 그대로 둔다
                 return f"```sql\n{code}```\n\n<sub>▶ 실행 결과 · 에러</sub>\n\n```text\nError Code: {e.args[0]}. {e.args[1]}\n```\n"
             raise SystemExit(f"에러가 나야 하는데 성공함:\n{code}")
         if kind == "answer":
@@ -240,7 +252,8 @@ def keep_tag(text, tag):
 def main():
     built = 0
     for src in sorted((ROOT / "src").rglob("*")):
-        if not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides":
+        if (not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides"
+                or src.name == "setup_extra.sql"):   # setup_extra.sql 은 setup.sql 안에 합쳐짐
             continue  # 슬라이드 정의(src/slides)는 tools/build_slides.py 담당
         rel = src.relative_to(ROOT / "src")
         m = CHAPTER_DIR.search(str(rel))
@@ -281,6 +294,10 @@ def main():
         print("built", rel)
     for f in ROOT.glob("chapters/*/.setup_done"):
         f.unlink()
+    # 종합 프로젝트: Ch10까지의 구성(쿠폰 테이블 포함)을 hanip_delivery11 로
+    if (ROOT / "project").is_dir():
+        (ROOT / "project" / "setup.sql").write_text(make_setup("11", "종합 프로젝트 — 단골 리워드"), encoding="utf-8")
+        print("built project/setup.sql")
 
 
 if __name__ == "__main__":

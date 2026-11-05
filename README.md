@@ -25,9 +25,10 @@
 | 05 | [JOIN — 흩어진 데이터 잇기](chapters/ch05-join/README.md) | ✅ |
 | 06 | [서브쿼리·집합·윈도우 함수](chapters/ch06-subquery-window/README.md) | ✅ |
 | 07 | [테이블 설계와 제약조건 (DDL)](chapters/ch07-ddl-constraints/README.md) | ✅ |
-| 08 | 데이터 변경과 트랜잭션 | 예정 |
-| 09 | 데이터 모델링과 정규화 | 예정 |
-| 10 | 뷰·인덱스·사용자 관리 | 예정 |
+| 08 | [데이터 변경과 트랜잭션](chapters/ch08-dml-transaction/README.md) | ✅ |
+| 09 | [데이터 모델링과 정규화](chapters/ch09-modeling-normalization/README.md) | ✅ |
+| 10 | [뷰·인덱스·사용자 관리](chapters/ch10-view-index-user/README.md) | ✅ |
+| (+) | [종합 프로젝트 — 단골 리워드](project/README.md) (선택) | ✅ |
 
 전체 설계와 리뉴얼 배경: [docs/CURRICULUM.md](docs/CURRICULUM.md)
 
@@ -45,6 +46,7 @@
 │       ├── answers.md/.sql 정답과 해설
 │       ├── quiz.md         다음 시간 복습 퀴즈 (강사용)
 │       └── instructor.md   강사 노트 (강사용)
+├── project/               종합 프로젝트 "단골 리워드" — 과제 안내 · setup.sql(hanip_delivery11) · 강사용 예시 답안
 ├── docs/                  커리큘럼 설계서, SQL 작성 규칙
 ├── src/                   교안 원본 (결과표 자동 생성 전)
 └── tools/                 시드 생성기, 교안 빌더
@@ -77,4 +79,6 @@ python3 tools/build.py     # 챕터별 setup.sql 생성 + src/*.md 의 ```sql ru
 - ```` ```sql answer ```` — 실습 정답. 문제지에는 결과표만, 해설지에는 SQL+결과
 - 슬라이드: `src/slides/chNN.py` 수정 → `python3 tools/build_slides.py NN` (SQL 결과는 슬라이드에도 실제 실행 결과가 들어갑니다. node + pptxgenjs 필요)
 - 교안 원본에서 DB 이름은 `{{DB}}`로 씁니다 (빌드 시 `hanip_deliveryNN`으로 치환)
+- 챕터 전용 테이블은 `src/chapters/chNN-*/setup_extra.sql` — 기본은 이후 챕터에도 누적(Ch08 쿠폰 테이블), 첫 줄에 `@this-chapter-only`가 있으면 그 챕터만
+- 슬라이드에서 EXPLAIN처럼 열이 많은 결과는 `"cols": ["type", "key", "rows"]`로 보여 줄 열만 지정
 - 시드 데이터를 바꾸려면 `tools/gen_seed.py` 수정 → `python3 tools/gen_seed.py` → 빌드
