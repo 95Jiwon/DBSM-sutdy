@@ -35,7 +35,7 @@ DECK = {
     "org": "Korea IT Academy Busan · 강사 김준일",
     "sections": [
         {"title": "시작", "slides": [
-            {"type": "cover", "label": "MySQL 30시간 · CHAPTER 09 · PART 2 쓰기",
+            {"type": "cover", "label": "MySQL 30시간 · CHAPTER 09 · PART 3 설계와 운영",
              "title": "데이터 모델링과\n정규화", "sub": "오늘의 DB · hanip_delivery09 (엑셀 주문장 포함)"},
             {"type": "request", "label": "오늘의 요청", "title": "질문 두 개, 기능 두 개",
              "from": "데이터팀 김 팀장",

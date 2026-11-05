@@ -24,7 +24,7 @@ import build  # noqa: E402  (make_setup, install, conn, split_sql 재사용)
 SKILL = os.environ.get("PPTX_SKILL", "")
 
 
-def run_sql(c, sql, limit, expect_error=False):
+def run_sql(c, sql, limit, expect_error=False, keep=None):
     try:
         res = build.run(c, sql)
     except pymysql.MySQLError as e:
@@ -36,13 +36,16 @@ def run_sql(c, sql, limit, expect_error=False):
     if res is None:
         return None
     cols, rows = res
+    if keep:  # EXPLAIN처럼 열이 많은 결과는 보여 줄 열만 (예: type · key · rows)
+        idx = [cols.index(k) for k in keep]
+        cols, rows = [cols[i] for i in idx], [[r[i] for i in idx] for r in rows]
     return {"cols": cols, "rows": [[build.fmt(v) for v in r] for r in rows[:limit]], "total": len(rows)}
 
 
 def resolve(slide, c):
     def one(p):
         if "sql" in p and p.get("run", True):
-            p["result"] = run_sql(c, p["sql"], p.get("limit", 5), p.get("error", False))
+            p["result"] = run_sql(c, p["sql"], p.get("limit", 5), p.get("error", False), p.get("cols"))
     if slide["type"] == "code":
         one(slide)
     if slide["type"] == "compare":

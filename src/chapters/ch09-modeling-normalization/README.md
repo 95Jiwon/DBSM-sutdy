@@ -1,6 +1,6 @@
 # Ch09. 데이터 모델링과 정규화
 
-> **PART 2 · 쓰기** | 3시간 | 난이도 ★★★
+> **PART 3 · 설계와 운영** | 3시간 | 난이도 ★★★
 > 이전: [Ch08. 데이터 변경과 트랜잭션](../ch08-dml-transaction/README.md) | 다음: [Ch10. 뷰·인덱스·사용자 관리](../ch10-view-index-user/README.md)
 
 ## 수업 준비

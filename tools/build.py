@@ -294,6 +294,10 @@ def main():
         print("built", rel)
     for f in ROOT.glob("chapters/*/.setup_done"):
         f.unlink()
+    # 종합 프로젝트: Ch10까지의 구성(쿠폰 테이블 포함)을 hanip_delivery11 로
+    if (ROOT / "project").is_dir():
+        (ROOT / "project" / "setup.sql").write_text(make_setup("11", "종합 프로젝트 — 단골 리워드"), encoding="utf-8")
+        print("built project/setup.sql")
 
 
 if __name__ == "__main__":
