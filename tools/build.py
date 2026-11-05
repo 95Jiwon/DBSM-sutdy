@@ -67,13 +67,18 @@ CREATE DATABASE {db}
 USE {db};
 
 """
+    # 챕터 전용 추가 구성. 기본은 누적(Ch08 쿠폰 테이블 → Ch09·Ch10에도 포함).
+    # 첫 줄에 '@this-chapter-only' 가 있으면 그 챕터에만 넣는다.
     extra = ""
-    hits = sorted((ROOT / "src" / "chapters").glob(f"ch{nn}-*/setup_extra.sql"))
-    if hits:  # 챕터 전용 추가 테이블 (예: Ch08 = Ch07에서 만든 쿠폰 테이블)
-        extra = ("\n-- =============================================================================\n"
-                 f"--  이 챕터 전용 추가 구성 (src/chapters/{hits[0].parent.name}/setup_extra.sql)\n"
-                 "-- =============================================================================\n"
-                 + hits[0].read_text(encoding="utf-8").replace("{{DB}}", db) + "\n")
+    for f in sorted((ROOT / "src" / "chapters").glob("ch*/setup_extra.sql")):
+        fnn = f.parent.name[2:4]
+        body = f.read_text(encoding="utf-8")
+        if fnn > nn or (fnn < nn and "@this-chapter-only" in body.splitlines()[0]):
+            continue
+        extra += ("\n-- =============================================================================\n"
+                  f"--  추가 구성 (src/chapters/{f.parent.name}/setup_extra.sql)\n"
+                  "-- =============================================================================\n"
+                  + body.replace("{{DB}}", db) + "\n")
     return head + schema.split("-- =============================================================================\n", 2)[-1] \
         + "\n" + seed + extra + "\n-- 설치 확인\n" + counts
 

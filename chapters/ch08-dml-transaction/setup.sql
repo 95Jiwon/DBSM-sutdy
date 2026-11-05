@@ -2194,10 +2194,10 @@ INSERT INTO reviews (review_id, order_id, rating, content, created_at) VALUES
 
 
 -- =============================================================================
---  이 챕터 전용 추가 구성 (src/chapters/ch08-dml-transaction/setup_extra.sql)
+--  추가 구성 (src/chapters/ch08-dml-transaction/setup_extra.sql)
 -- =============================================================================
 -- Ch07에서 설계한 쿠폰 테이블 (최종본) + 6월 말 발급 데이터
--- Ch08부터는 이 테이블이 setup.sql에 포함됩니다.
+-- Ch08부터 모든 챕터의 setup.sql에 포함됩니다.
 
 CREATE TABLE coupons (
     coupon_id        INT          NOT NULL AUTO_INCREMENT  COMMENT '쿠폰 번호',
