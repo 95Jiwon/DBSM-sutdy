@@ -1,5 +1,5 @@
 -- Ch07에서 설계한 쿠폰 테이블 (최종본) + 6월 말 발급 데이터
--- Ch08부터는 이 테이블이 setup.sql에 포함됩니다.
+-- Ch08부터 모든 챕터의 setup.sql에 포함됩니다.
 
 CREATE TABLE coupons (
     coupon_id        INT          NOT NULL AUTO_INCREMENT  COMMENT '쿠폰 번호',
