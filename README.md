@@ -31,6 +31,7 @@
 | 11 | [트리거 — 데이터가 바뀌면 자동으로](chapters/ch11-trigger/README.md) | ✅ |
 | 12 | [저장 프로시저와 함수](chapters/ch12-procedure/README.md) | ✅ |
 | (+) | [종합 프로젝트 — 단골 리워드](project/README.md) (선택) | ✅ |
+| (+) | [연습문제 20 — 쇼핑몰 DB `hanip_market`](drills/shopping-mall/README.md) (JOIN·GROUP BY·서브쿼리·윈도우·UNION 복습) | ✅ |
 
 전체 설계와 리뉴얼 배경: [docs/CURRICULUM.md](docs/CURRICULUM.md)
 
@@ -48,6 +49,7 @@
 │       ├── answers.md/.sql 정답과 해설
 │       ├── quiz.md         다음 시간 복습 퀴즈 (강사용)
 │       └── instructor.md   강사 노트 (강사용)
+├── drills/                복습 문제집 — shopping-mall/: 쇼핑몰 DB(hanip_market) setup.sql + 20문제 · 정답
 ├── project/               종합 프로젝트 "단골 리워드" — 과제 안내 · setup.sql(hanip_delivery13) · 강사용 예시 답안
 ├── docs/                  커리큘럼 설계서, SQL 작성 규칙
 ├── src/                   교안 원본 (결과표 자동 생성 전)
@@ -81,6 +83,7 @@ python3 tools/build.py     # 챕터별 setup.sql 생성 + src/*.md 의 ```sql ru
 - ```` ```sql answer ```` — 실습 정답. 문제지에는 결과표만, 해설지에는 SQL+결과
 - 슬라이드: `src/slides/chNN.py` 수정 → `python3 tools/build_slides.py NN` (SQL 결과는 슬라이드에도 실제 실행 결과가 들어갑니다. node + pptxgenjs 필요)
 - 트리거·프로시저 예제는 Workbench처럼 `DELIMITER $$ … $$ DELIMITER ;`로 씁니다 (빌더가 DELIMITER를 해석)
+- 복습 문제집: `src/drills/<이름>/practice.src.md` → `python3 tools/build_drill.py` (데이터 생성기 `tools/gen_drill_market.py`)
 - 교안 원본에서 DB 이름은 `{{DB}}`로 씁니다 (빌드 시 `hanip_deliveryNN`으로 치환)
 - 챕터 전용 테이블은 `src/chapters/chNN-*/setup_extra.sql` — 기본은 이후 챕터에도 누적(Ch08 쿠폰 테이블), 첫 줄에 `@this-chapter-only`가 있으면 그 챕터만
 - 슬라이드에서 EXPLAIN처럼 열이 많은 결과는 `"cols": ["type", "key", "rows"]`로 보여 줄 열만 지정
