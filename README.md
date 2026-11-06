@@ -29,7 +29,7 @@
 | 09 | [데이터 모델링과 정규화](chapters/ch09-modeling-normalization/README.md) | ✅ |
 | 10 | [뷰·인덱스·사용자 관리](chapters/ch10-view-index-user/README.md) | ✅ |
 | 11 | [트리거 — 데이터가 바뀌면 자동으로](chapters/ch11-trigger/README.md) | ✅ |
-| 12 | 저장 프로시저와 함수 | 예정 |
+| 12 | [저장 프로시저와 함수](chapters/ch12-procedure/README.md) | ✅ |
 | (+) | [종합 프로젝트 — 단골 리워드](project/README.md) (선택) | ✅ |
 
 전체 설계와 리뉴얼 배경: [docs/CURRICULUM.md](docs/CURRICULUM.md)

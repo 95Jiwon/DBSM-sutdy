@@ -43,6 +43,9 @@ def run_sql(c, sql, limit, expect_error=False, keep=None):
 
 
 def resolve(slide, c):
+    if slide.get("pre"):  # 화면에 보이지 않게 먼저 실행할 SQL (예: 슬라이드에 다 담기 어려운 긴 프로시저 생성)
+        build.run(c, slide["pre"])
+
     def one(p):
         if "sql" in p and p.get("run", True):
             p["result"] = run_sql(c, p["sql"], p.get("limit", 5), p.get("error", False), p.get("cols"))
