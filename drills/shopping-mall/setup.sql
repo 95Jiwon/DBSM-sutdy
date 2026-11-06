@@ -8,13 +8,15 @@
 CREATE DATABASE hanip_market DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE hanip_market;
 
-CREATE TABLE categories (
-    category_id  INT          NOT NULL                COMMENT '카테고리 번호',
-    name         VARCHAR(30)  NOT NULL                COMMENT '카테고리 이름',
-    parent_id    INT              NULL                COMMENT '상위(대분류) 번호 — 대분류는 NULL',
-    CONSTRAINT pk_categories        PRIMARY KEY (category_id),
+CREATE TABLE categories
+(
+    category_id INT         NOT NULL COMMENT '카테고리 번호',
+    name        VARCHAR(30) NOT NULL COMMENT '카테고리 이름',
+    parent_id   INT         NULL COMMENT '상위(대분류) 번호 — 대분류는 NULL',
+    CONSTRAINT pk_categories PRIMARY KEY (category_id),
     CONSTRAINT fk_categories_parent FOREIGN KEY (parent_id) REFERENCES categories (category_id)
-) COMMENT '상품 카테고리 (대분류 4 · 소분류 12)';
+)   COMMENT '상품 카테고리 (대분류 4 · 소분류 12)';
+
 
 CREATE TABLE products (
     product_id   INT          NOT NULL AUTO_INCREMENT COMMENT '상품 번호',
