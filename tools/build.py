@@ -269,9 +269,9 @@ def keep_tag(text, tag):
 def main():
     built = 0
     for src in sorted((ROOT / "src").rglob("*")):
-        if (not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides"
+        if (not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] in ("slides", "drills")
                 or src.name == "setup_extra.sql"):   # setup_extra.sql 은 setup.sql 안에 합쳐짐
-            continue  # 슬라이드 정의(src/slides)는 tools/build_slides.py 담당
+            continue  # 슬라이드(src/slides)는 build_slides.py, 연습문제집(src/drills)은 build_drill.py 담당
         rel = src.relative_to(ROOT / "src")
         m = CHAPTER_DIR.search(str(rel))
         nn = m.group(1) if m else "01"
