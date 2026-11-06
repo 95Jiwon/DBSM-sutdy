@@ -5,11 +5,11 @@
 
 ## 수업 준비
 
-이 폴더의 **`setup.sql`**을 root로 실행하세요. 프로젝트 DB **`hanip_delivery11`**이 만들어집니다. Ch10과 같은 데이터(쿠폰 테이블 포함)에서 시작합니다.
+이 폴더의 **`setup.sql`**을 root로 실행하세요. 프로젝트 DB **`hanip_delivery13`**이 만들어집니다. Ch10과 같은 데이터(쿠폰 테이블 포함)에서 시작합니다.
 
 ```sql
-SHOW DATABASES LIKE 'hanip_delivery%';   -- 01 ~ 10, 그리고 11
-USE hanip_delivery11;
+SHOW DATABASES LIKE 'hanip_delivery%';   -- 01 ~ 12, 그리고 13
+USE hanip_delivery13;
 ```
 
 ## 오늘의 요청

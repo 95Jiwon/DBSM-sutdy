@@ -2,7 +2,7 @@
 
 부산 지역 배달 플랫폼 **한입배달**의 데이터팀 신입이 되어, 실제 서비스 형태의 DB 하나로 조회부터 설계·운영까지 배우는 MySQL 입문 과정입니다.
 
-- 대상: SQL 입문자 · 10챕터 × 3시간 (+ 선택 종합 프로젝트)
+- 대상: SQL 입문자 · 12챕터 × 3시간 (+ 선택 종합 프로젝트)
 - 환경: MySQL 8.0 이상, MySQL Workbench 8.0
 - 데이터: 한입배달 DB (챕터마다 `hanip_delivery01`, `02`, … 로 새로 생성) — 고객 30 · 가게 15 · 메뉴 70 · 기사 8 · 주문 563 · 주문상세 1,060 · 리뷰 260
 
@@ -28,6 +28,8 @@
 | 08 | [데이터 변경과 트랜잭션](chapters/ch08-dml-transaction/README.md) | ✅ |
 | 09 | [데이터 모델링과 정규화](chapters/ch09-modeling-normalization/README.md) | ✅ |
 | 10 | [뷰·인덱스·사용자 관리](chapters/ch10-view-index-user/README.md) | ✅ |
+| 11 | [트리거 — 데이터가 바뀌면 자동으로](chapters/ch11-trigger/README.md) | ✅ |
+| 12 | 저장 프로시저와 함수 | 예정 |
 | (+) | [종합 프로젝트 — 단골 리워드](project/README.md) (선택) | ✅ |
 
 전체 설계와 리뉴얼 배경: [docs/CURRICULUM.md](docs/CURRICULUM.md)
@@ -46,7 +48,7 @@
 │       ├── answers.md/.sql 정답과 해설
 │       ├── quiz.md         다음 시간 복습 퀴즈 (강사용)
 │       └── instructor.md   강사 노트 (강사용)
-├── project/               종합 프로젝트 "단골 리워드" — 과제 안내 · setup.sql(hanip_delivery11) · 강사용 예시 답안
+├── project/               종합 프로젝트 "단골 리워드" — 과제 안내 · setup.sql(hanip_delivery13) · 강사용 예시 답안
 ├── docs/                  커리큘럼 설계서, SQL 작성 규칙
 ├── src/                   교안 원본 (결과표 자동 생성 전)
 └── tools/                 시드 생성기, 교안 빌더
@@ -78,6 +80,7 @@ python3 tools/build.py     # 챕터별 setup.sql 생성 + src/*.md 의 ```sql ru
 - ```` ```sql error ```` — 에러가 나야 하는 예제. 실제 에러 메시지 삽입
 - ```` ```sql answer ```` — 실습 정답. 문제지에는 결과표만, 해설지에는 SQL+결과
 - 슬라이드: `src/slides/chNN.py` 수정 → `python3 tools/build_slides.py NN` (SQL 결과는 슬라이드에도 실제 실행 결과가 들어갑니다. node + pptxgenjs 필요)
+- 트리거·프로시저 예제는 Workbench처럼 `DELIMITER $$ … $$ DELIMITER ;`로 씁니다 (빌더가 DELIMITER를 해석)
 - 교안 원본에서 DB 이름은 `{{DB}}`로 씁니다 (빌드 시 `hanip_deliveryNN`으로 치환)
 - 챕터 전용 테이블은 `src/chapters/chNN-*/setup_extra.sql` — 기본은 이후 챕터에도 누적(Ch08 쿠폰 테이블), 첫 줄에 `@this-chapter-only`가 있으면 그 챕터만
 - 슬라이드에서 EXPLAIN처럼 열이 많은 결과는 `"cols": ["type", "key", "rows"]`로 보여 줄 열만 지정

@@ -1,9 +1,9 @@
 -- =============================================================================
 --  종합 프로젝트 "단골 리워드" — 강사용 예시 답안
---  전제: project/setup.sql 실행 완료 (hanip_delivery11)
+--  전제: project/setup.sql 실행 완료 (hanip_delivery13)
 --  ⚠ 학생 과제 마감 후 공개를 권장합니다. 정답은 하나가 아닙니다 — 설계 근거를 평가하세요.
 -- =============================================================================
-USE hanip_delivery11;
+USE hanip_delivery13;
 
 -- -----------------------------------------------------------------------------
 -- ① DDL
@@ -128,5 +128,5 @@ ORDER BY customer_id;
 -- ⑥ 권한: CS팀은 잔액 뷰만 조회
 DROP ROLE IF EXISTS 'hanip_reward_cs';
 CREATE ROLE 'hanip_reward_cs';
-GRANT SELECT ON hanip_delivery11.v_point_balances TO 'hanip_reward_cs';
+GRANT SELECT ON hanip_delivery13.v_point_balances TO 'hanip_reward_cs';
 SHOW GRANTS FOR 'hanip_reward_cs';
