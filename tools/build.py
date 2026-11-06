@@ -120,34 +120,51 @@ def run(c, code):
     with c.cursor() as cur:
         for s in stmts:
             cur.execute(s)
-            if cur.description:
-                cols = [d[0] for d in cur.description]
-                result = (cols, cur.fetchall())
+            while True:   # CALL은 결과셋이 여러 개일 수 있음 → 마지막 결과셋
+                if cur.description:
+                    cols = [d[0] for d in cur.description]
+                    result = (cols, cur.fetchall())
+                if not cur.nextset():
+                    break
     return result
 
 
 def split_sql(code):
-    # 주석 제거 후 ; 기준 분리 (문자열 안의 ; 고려)
-    out, buf, q = [], [], None
-    lines = []
+    """주석 줄 제거 후 구분자 기준으로 문장 분리.
+    - 문자열 안의 구분자는 무시
+    - Workbench와 같은 `DELIMITER $$` 지시문 지원 (트리거·프로시저 본문의 ; 보호)
+    """
+    out, buf, q, delim = [], [], None, ";"
     for line in code.splitlines():
-        if line.strip().startswith("--"):
+        st = line.strip()
+        if q is None and st.startswith("--"):
             continue
-        lines.append(line)
-    text = "\n".join(lines)
-    for ch in text:
-        if q:
-            buf.append(ch)
-            if ch == q:
-                q = None
-        elif ch in "'\"":
-            q = ch
-            buf.append(ch)
-        elif ch == ";":
-            out.append("".join(buf))
-            buf = []
-        else:
-            buf.append(ch)
+        m = re.match(r"(?i)^DELIMITER\s+(\S+)$", st) if q is None else None
+        if m:
+            if "".join(buf).strip():
+                out.append("".join(buf))
+            buf, delim = [], m.group(1)
+            continue
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            if q:
+                buf.append(ch)
+                if ch == q:
+                    q = None
+                i += 1
+            elif ch in "'\"":
+                q = ch
+                buf.append(ch)
+                i += 1
+            elif line.startswith(delim, i):
+                out.append("".join(buf))
+                buf = []
+                i += len(delim)
+            else:
+                buf.append(ch)
+                i += 1
+        buf.append("\n")
     out.append("".join(buf))
     return out
 
@@ -252,9 +269,9 @@ def keep_tag(text, tag):
 def main():
     built = 0
     for src in sorted((ROOT / "src").rglob("*")):
-        if (not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] == "slides"
+        if (not src.is_file() or "__pycache__" in src.parts or src.parts[len(ROOT.parts) + 1] in ("slides", "drills")
                 or src.name == "setup_extra.sql"):   # setup_extra.sql 은 setup.sql 안에 합쳐짐
-            continue  # 슬라이드 정의(src/slides)는 tools/build_slides.py 담당
+            continue  # 슬라이드(src/slides)는 build_slides.py, 연습문제집(src/drills)은 build_drill.py 담당
         rel = src.relative_to(ROOT / "src")
         m = CHAPTER_DIR.search(str(rel))
         nn = m.group(1) if m else "01"
@@ -294,9 +311,9 @@ def main():
         print("built", rel)
     for f in ROOT.glob("chapters/*/.setup_done"):
         f.unlink()
-    # 종합 프로젝트: Ch10까지의 구성(쿠폰 테이블 포함)을 hanip_delivery11 로
+    # 종합 프로젝트: 쿠폰 테이블까지 포함한 기본 구성을 hanip_delivery13 으로 (Ch11·12 다음 번호)
     if (ROOT / "project").is_dir():
-        (ROOT / "project" / "setup.sql").write_text(make_setup("11", "종합 프로젝트 — 단골 리워드"), encoding="utf-8")
+        (ROOT / "project" / "setup.sql").write_text(make_setup("13", "종합 프로젝트 — 단골 리워드"), encoding="utf-8")
         print("built project/setup.sql")
 
 
